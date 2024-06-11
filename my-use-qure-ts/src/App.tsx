@@ -21,19 +21,19 @@ interface IPokemon {
   url: "string";
 }
 
-interface IUseQuery {
+interface IUseQuery<T> {
   isPending: boolean;
-  data: IPokemon[];
+  data: T;
   error: string;
   isLoading: boolean;
   isError: boolean;
 }
 
-const useQuery = (
+const useQuery = <T,>(
   argsParams: unknown[] = [],
   queryFn: () => Promise<Response>
-): IUseQuery => {
-  const [data, setData] = useState<IPokemon[]>([]);
+): IUseQuery<T> => {
+  const [data, setData] = useState<T>(null as unknown as T);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -71,8 +71,9 @@ const useQuery = (
 const App: FC = () => {
   const [isPop, setIsPop] = useState<boolean>(false);
 
-  const { isPending, data, error, isLoading, isError } = useQuery([isPop], () =>
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=10&offset=0")
+  const { isPending, data, error, isLoading, isError } = useQuery<IPokemon[]>(
+    [isPop],
+    () => fetch("https://pokeapi.co/api/v2/pokemon?limit=10&offset=0")
   );
 
   console.log(isLoading);
