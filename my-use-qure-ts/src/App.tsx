@@ -23,7 +23,7 @@ interface IPokemon {
 
 interface IUseQuery<T> {
   isPending: boolean;
-  data: T;
+  data?: T;
   error: string;
   isLoading: boolean;
   isError: boolean;
@@ -33,7 +33,7 @@ const useQuery = <T,>(
   argsParams: unknown[] = [],
   queryFn: () => Promise<Response>
 ): IUseQuery<T> => {
-  const [data, setData] = useState<T>(null as unknown as T);
+  const [data, setData] = useState<T | undefined>(null as T);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -85,7 +85,7 @@ const App: FC = () => {
       ) : isError ? (
         <p>{error}</p>
       ) : (
-        data.map((pokemon: IPokemon, index: number) => (
+        data?.map((pokemon: IPokemon, index: number) => (
           <p key={index}>{pokemon.name}</p>
         ))
       )}
