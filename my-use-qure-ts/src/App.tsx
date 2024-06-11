@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, FC } from "react";
 import "./App.css";
 
 const useUpdateEffect = (
-  argsParams: any[],
+  argsParams: unknown[] = [],
   fnSecondRendering: (isFirstRender: boolean) => void
 ) => {
   const renderFirst = useRef(true);
@@ -16,19 +16,24 @@ const useUpdateEffect = (
   }, argsParams);
 };
 
+interface IPokemon {
+  name: "string";
+  url: "string";
+}
+
 interface IUseQuery {
   isPending: boolean;
-  data: any[];
+  data: IPokemon[];
   error: string;
   isLoading: boolean;
   isError: boolean;
 }
 
 const useQuery = (
-  argsParams: any[],
+  argsParams: unknown[] = [],
   queryFn: () => Promise<Response>
 ): IUseQuery => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<IPokemon[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -71,6 +76,7 @@ const App: FC = () => {
   );
 
   console.log(isLoading);
+
   return (
     <div className="App">
       {isPending ? (
@@ -78,7 +84,7 @@ const App: FC = () => {
       ) : isError ? (
         <p>{error}</p>
       ) : (
-        data.map((pokemon: any, index: number) => (
+        data.map((pokemon: IPokemon, index: number) => (
           <p key={index}>{pokemon.name}</p>
         ))
       )}
